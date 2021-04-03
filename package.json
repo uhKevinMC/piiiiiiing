@@ -1,0 +1,12 @@
+{
+  "name": "piiiiiiing",
+  "version": "1.0.0",
+  "description": "Bot that pongs you when you ping it.",
+  "main": "src/index.ts",
+  "dependencies": {
+    "discord.js": "^12.5.3"
+  },
+  "devDependencies": {},
+  "author": "uhKevinMC",
+  "license": "ISC"
+}
