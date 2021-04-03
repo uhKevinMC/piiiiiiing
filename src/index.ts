@@ -17,7 +17,7 @@ client.on('message', async (message: Message): Promise<Message> => {
 
     newMsg.edit(`Pong! \`${endTime - startTime}ms\``);
   } else if (message.content === `${prefix}heartbeat`) {
-    message.reply(`Pong! \`${client.ws.ping}\``);
+    message.reply(`Pong! \`${client.ws.ping}ms\``);
   }
 });
 
