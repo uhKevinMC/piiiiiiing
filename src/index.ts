@@ -1,26 +1,31 @@
-import { Client, ClientOptions, Message } from 'discord.js';
+import { Client, ClientOptions, BaseInteraction, InteractionResponse, GatewayIntentBits } from 'discord.js';
 
-const client: Client = new Client({ intents: ['GUILDS', 'GUILD_MESSAGES'] } as ClientOptions);
-const prefix: string = '!';
+const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 const token: string = 'insert token here';
 
-void client.login(token);
+await client.login(token);
 
-client.on('message', async (message: Message): Promise<Message> => {
-  if (message.system) return;
-  if (message.author.bot) return;
+client.on('interactionCreate', async (interaction: BaseInteraction): Promise<InteractionResponse<boolean>> => {
+  if (interaction.isChatInputCommand()) {
 
-  if (message.content === `${prefix}ping`) {
-    const startTime: number = new Date().getTime();
-    const newMsg: Message = await message.reply('Pinging...');
-    const endTime: number = new Date().getTime();
+    if (interaction.commandName === 'ping') {
+      await interaction.reply({
+        content: 'Pong!',
+        ephemeral: true,
+      });
 
-    newMsg.edit(`Pong! \`${endTime - startTime}ms\``);
-  } else if (message.content === `${prefix}heartbeat`) {
-    message.reply(`Pong! \`${client.ws.ping}ms\``);
+      const createdTimestamp = interaction.createdTimestamp;
+      const responseTimestamp = (await interaction.fetchReply()).createdTimestamp;
+
+      return interaction.editReply({
+        content: `Pong!  \`${responseTimestamp - createdTimestamp}ms\``,
+      });
+    } else if (interaction.commandName === 'heartbeat') {
+      interaction.reply(`Pong! \`${client.ws.ping}ms\``);
+    }
   }
 });
 
-void client.on('ready', () => {
+client.once('ready', () => {
   console.log(`I'm ready!`);
 });
